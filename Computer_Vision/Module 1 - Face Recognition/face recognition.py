@@ -5,6 +5,8 @@ import cv2
 face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml") #filters to detect the face
 # for the eyes
 eye_cascade = cv2.CascadeClassifier("haarcascade_eye.xml") #filters to detect the face
+# for smile
+smile_cascade = cv2.CascadeClassifier("haarcascade_smile.xml")
 
 # Function for detections
 def detect(gray, frame):    
@@ -24,10 +26,17 @@ def detect(gray, frame):
         roi_color = frame[y: y + h, x: x + w]
         # detect eyes
         eyes = eye_cascade.detectMultiScale(roi_gray, 1.1, 3)
+        # detect smile
+        smile = smile_cascade.detectMultiScale(roi_gray, 1.4, 10)
+                                            
         
         # draw the rectangles around the eyes
         for (ex, ey, ew, eh) in eyes:
             cv2.rectangle(roi_color, (ex, ey), (ex + ew,ey + eh), (0, 255, 0), 2)
+            
+        # draw the rectangles around the smile
+        for (sx, sy, sw, sh) in smile:
+            cv2.rectangle(roi_color, (sx, sy), (sx + sw,sy + sh), (0, 0, 255), 2)
         
     return frame
 
